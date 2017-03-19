@@ -14,15 +14,13 @@
 
 class Config{
 
+    // Print configuration to ostream
+    friend std::ostream& operator<<(std::ostream&, const Config&);
+
     public:
 
         // Default constructor (takes filename of config file)
         Config(std::string fname="config");
-
-        // Print configuration to ostream
-        std::ostream& dump(std::ostream& stream=std::cerr);
-
-    // private:
 
         // Time in seconds between fetches of the various sites
         unsigned PERIOD_FETCH;
@@ -38,5 +36,8 @@ class Config{
 
         // Name of file containing target sites
         std::string SITE_FILE;
+
+
+    private:
 };
 

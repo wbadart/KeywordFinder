@@ -32,30 +32,30 @@ Config::Config(std::string fname):
             value += line[i];
 
         if(param == "PERIOD_FETCH")
-                PERIOD_FETCH = std::stoi(value);
+            PERIOD_FETCH = std::stoi(value);
         else if(param == "NUM_FETCH")
-                NUM_FETCH = std::stoi(value);
+            NUM_FETCH = std::stoi(value);
         else if(param == "NUM_PARSE")
-                NUM_PARSE = std::stoi(value);
+            NUM_PARSE = std::stoi(value);
         else if(param == "SEARCH_FILE")
-                SEARCH_FILE = value;
+            SEARCH_FILE = value;
         else if(param == "SITE_FILE")
-                SITE_FILE = value;
+            SITE_FILE = value;
         else std::cerr << "Parameter \"" << param
                        << "\" not recognized. Ignoring\n";
 
     } while(line.size());
 
-    dump();
+    std::cerr << *this << std::endl;
 }
 
-std::ostream& Config::dump(std::ostream& stream){
+std::ostream& operator<<(std::ostream& stream, const Config& c){
     stream << "Program configuration:" << std::endl
-           << "\tPERIOD_FETCH: " << PERIOD_FETCH << std::endl
-           << "\tNUM_FETCH:    " << NUM_FETCH    << std::endl
-           << "\tNUM_PARSE:    " << NUM_PARSE    << std::endl
-           << "\tSEARCH_FILE:  " << SEARCH_FILE  << std::endl
-           << "\tSITE_FILE:    " << SITE_FILE    << std::endl;
+           << "\tPERIOD_FETCH: " << c.PERIOD_FETCH << std::endl
+           << "\tNUM_FETCH:    " << c.NUM_FETCH    << std::endl
+           << "\tNUM_PARSE:    " << c.NUM_PARSE    << std::endl
+           << "\tSEARCH_FILE:  " << c.SEARCH_FILE  << std::endl
+           << "\tSITE_FILE:    " << c.SITE_FILE    << std::endl;
     return stream;
 }
 
