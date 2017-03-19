@@ -7,8 +7,17 @@
  * Badart, Will
  * created: MAR 2017
  */
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include "read_file.h"
+
+using namespace std;
 
 int main(int argc, char *argv[]){
-    return 0;
+    FileObj SitesFile("ExampleSites.txt");
+	SitesFile.print_items();
+	return 0;
 }
 

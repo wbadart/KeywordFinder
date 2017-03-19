@@ -10,6 +10,7 @@ class FileObj {
 		~FileObj();
 		void load_items();
 		vector<string> get_items();
+		void print_items();
 	private:
 		string filename;
 		vector<string> items;
