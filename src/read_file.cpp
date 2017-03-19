@@ -20,5 +20,5 @@ void FileObj::load_items(){
 	while(getline(myfile, line)){
 		items.push_back(line);
 	}
-	myfile.close()	
+	myfile.close();	
 }
