@@ -37,7 +37,6 @@ class Config{
         // Name of file containing target sites
         std::string SITE_FILE;
 
-
     private:
 };
 
