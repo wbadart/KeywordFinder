@@ -8,6 +8,9 @@
  * created: MAR 2017
  */
 
+#ifndef _H_CONFIG
+#define _H_CONFIG
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -39,4 +42,6 @@ class Config{
 
     private:
 };
+
+#endif
 

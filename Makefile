@@ -15,11 +15,10 @@ CXX  	  = g++
 CXX_FLAGS = -Wall -ggdb
 
 LD 	     = g++
-LD_FLAGS =
+LD_FLAGS = -lcurl
 
-MAIN  = main
-OBJS  = main.o config.o read_file.o
-TESTS =
+OBJS  = main.o config.o read_file.o web.o
+TESTS = test-usage
 
 
 all: $(OBJS)
@@ -29,8 +28,11 @@ all: $(OBJS)
 	$(CXX) $(CXX_FLAGS) $< -o $@ -c
 
 clean:
-	@rm -f $(MAIN) *.o
+	@rm -f $(OUT) *.o
 
 test: $(TESTS)
 	@echo "Tests complete."
+
+test-usage: all
+	./$(OUT) --help
 
