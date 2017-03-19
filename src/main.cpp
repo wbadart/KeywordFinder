@@ -11,6 +11,8 @@
 #include <cstdlib>      // exit
 #include <iostream>
 #include <string>
+
+#include "read_file.h"
 #include "config.hpp"
 
 void usage(int status=0);
@@ -21,7 +23,10 @@ int main(int argc, char *argv[]){
     Config config(config_fname);
     usage();
 
-    return 0;
+    FileObj SitesFile("ExampleSites.txt");
+	SitesFile.print_items();
+
+	return 0;
 }
 
 void usage(int status){
