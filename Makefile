@@ -16,11 +16,18 @@ LD 	     = g++
 LD_FLAGS =
 
 MAIN  = main
+OBJS  = config
 TESTS =
 
 
-all: main.o
-	$(CXX) $(CXX_FLAGS) $< -o $(MAIN)
+all: main.o $(OBJS)
+	$(LD) $(LD_FLAGS) $< -o $(MAIN)
+
+%.o: src/%.cpp
+	$(CXX) $(CXX_FLAGS) $< -o $@ -c
+
+clean:
+	@rm -f *.o
 
 test: $(TESTS)
 	@echo "Tests complete."
