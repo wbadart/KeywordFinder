@@ -10,13 +10,13 @@
 ##
 
 CXX  	  = g++
-CXX_FLAGS = -Wall -ggdb -std=gnu++11
+CXX_FLAGS = -Wall -ggdb
 
 LD 	     = g++
 LD_FLAGS =
 
 MAIN  = main
-OBJS  = main.o read_file.o
+OBJS  = main.o config.o read_file.o
 TESTS =
 
 

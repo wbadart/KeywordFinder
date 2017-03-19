@@ -20,7 +20,7 @@ class Config{
     public:
 
         // Default constructor (takes filename of config file)
-        Config(std::string fname="config");
+        Config(std::string fname="./config");
 
         // Time in seconds between fetches of the various sites
         unsigned PERIOD_FETCH;

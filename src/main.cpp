@@ -8,7 +8,7 @@
  * created: MAR 2017
  */
 
-#include <cstdlib>      // exit
+#include <cstdlib>  // exit
 #include <iostream>
 #include <string>
 
@@ -19,14 +19,13 @@ void usage(int status=0);
 
 int main(int argc, char *argv[]){
 
-    std::string config_fname(argc == 2 ? argv[1] : "./config");
-    Config config(config_fname);
-    usage();
+    Config config(argc == 2 ? argv[1] : "./config");
+    /* usage(); */
 
-    FileObj SitesFile("ExampleSites.txt");
-	SitesFile.print_items();
+    /* FileObj SitesFile("ExampleSites.txt"); */
+	/* SitesFile.print_items(); */
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void usage(int status){
