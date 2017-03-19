@@ -8,7 +8,13 @@
  * created: MAR 2017
  */
 
+#include <iostream>
+#include "config.hpp"
+
 int main(int argc, char *argv[]){
+
+    Config config;
+
     return 0;
 }
 
