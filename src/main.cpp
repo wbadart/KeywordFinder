@@ -12,10 +12,10 @@
 #include <vector>
 
 #include "read_file.h"
-
-using namespace std;
+#include "config.hpp"
 
 int main(int argc, char *argv[]){
+	Config config;
     FileObj SitesFile("ExampleSites.txt");
 	SitesFile.print_items();
 	return 0;
