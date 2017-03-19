@@ -9,6 +9,8 @@
 # created: MAR 2017
 ##
 
+OUT = site-tester
+
 CXX  	  = g++
 CXX_FLAGS = -Wall -ggdb
 
@@ -21,7 +23,7 @@ TESTS =
 
 
 all: $(OBJS)
-	$(LD) $(LD_FLAGS) $^ -o $(MAIN)
+	$(LD) $(LD_FLAGS) $^ -o $(OUT)
 
 %.o: src/%.cpp
 	$(CXX) $(CXX_FLAGS) $< -o $@ -c

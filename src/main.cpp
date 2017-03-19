@@ -19,8 +19,11 @@ void usage(int status=0);
 
 int main(int argc, char *argv[]){
 
+    if(argc == 2 && (std::string(argv[1]) == "-h"
+                 ||  std::string(argv[1]) == "--help"))
+        usage();
+
     Config config(argc == 2 ? argv[1] : "./config");
-    /* usage(); */
 
     /* FileObj SitesFile("ExampleSites.txt"); */
 	/* SitesFile.print_items(); */
@@ -29,10 +32,12 @@ int main(int argc, char *argv[]){
 }
 
 void usage(int status){
-    std::cerr << "usage: site-tester CONFIG_FILENAME" << std::endl
-              << "Options:" << std::endl
-              << "\tCONFIG_FILENAME    Specify name of config file "
-              << "(default: \"./config\")" << std::endl;
+    std::cerr << "usage: site-tester CONFIG_FILENAME [ -h ]"
+              << std::endl << "Options:" << std::endl
+              << "\tCONFIG_FILENAME  Specify name of config file "
+              << "(default: \"./config\")" << std::endl
+              << "\t-h --help        Print this help message"
+              << std::endl;
     exit(status);
 }
 
