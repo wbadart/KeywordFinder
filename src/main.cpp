@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
     Config config(argc == 2 ? argv[1] : "./config"); Web web;
     FileObj sites(config.SITE_FILE);
     for(auto x: sites.get_items())
-        std::cout << "web:file:" << web.exec(x);
+        std::cout << "web:file:" << web.exec(x) << std::endl;
 
     /* FileObj SitesFile("ExampleSites.txt"); */
 	/* SitesFile.print_items(); */

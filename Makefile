@@ -39,7 +39,5 @@ test-usage: all
 test-get: all
 	@echo "http://example.com" > tmp_sites
 	@echo "SITE_FILE=tmp_sites" > tmp_config
-	# test -s tests that file exists and is not empty
-	@test -s $(./$(OUT) tmp_config | awk -d: "/web.*file.*/{ print $3 }")
-
+	./$(OUT) tmp_config 2> /dev/null | awk -F: '/web_result/ { print $$3 }' | xargs test -s
 
