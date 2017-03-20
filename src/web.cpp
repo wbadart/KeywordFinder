@@ -11,4 +11,5 @@
 #include "./web.hpp"
 
 Web::Web():curl(curl_easy_init()){}
+Web::~Web(){curl_easy_cleanup(curl);}
 

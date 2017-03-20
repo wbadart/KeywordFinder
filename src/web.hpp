@@ -16,6 +16,7 @@
 class Web{
     public:
         Web();
+        ~Web();
     private:
         CURL    *curl;
         CURLcode result;
