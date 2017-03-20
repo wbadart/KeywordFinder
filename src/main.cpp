@@ -24,10 +24,10 @@ int main(int argc, char *argv[]){
                  ||  std::string(argv[1]) == "--help"))
         usage();
 
-    Config config(argc == 2 ? argv[1] : "./config");
-
-    Web web;
-    std::cout << "RES FILE: " << web.exec("http://example.com") << std::endl;
+    Config config(argc == 2 ? argv[1] : "./config"); Web web;
+    FileObj sites(config.SITE_FILE);
+    for(auto x: sites.get_items())
+        std::cout << "web:file:" << web.exec(x);
 
     /* FileObj SitesFile("ExampleSites.txt"); */
 	/* SitesFile.print_items(); */
