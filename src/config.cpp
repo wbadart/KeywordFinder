@@ -20,15 +20,12 @@ Config::Config(std::string fname):
     std::cerr << "conf:Parsing config file \"" << fname << "\"\n";
     std::ifstream fs(fname); std::string line;
 
-    do{
-
-        std::getline(fs, line);
-        if(!line.size()) break;
+    while(std::getline(fs, line)){
 
         std::string param, value; size_t i;
         for(i = 0; i < line.size() && line[i] != '='; i++)
             param += line[i];
-        for(i = i + 1; i < line.size() && line[i] != '\n'; i++)
+        for(i += 1; i < line.size() && line[i] != '\n'; i++)
             value += line[i];
 
         if(param == "PERIOD_FETCH")
@@ -43,8 +40,7 @@ Config::Config(std::string fname):
             SITE_FILE = value;
         else std::cerr << "conf:Parameter \"" << param
                        << "\" not recognized. Ignoring\n";
-
-    } while(line.size());
+    }
 
     std::cerr << *this << std::endl;
 }
