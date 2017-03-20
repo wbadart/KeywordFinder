@@ -17,7 +17,7 @@ CXX_FLAGS = -Wall -ggdb
 LD 	     = g++
 LD_FLAGS = -lcurl
 
-OBJS  = main.o config.o read_file.o web.o
+OBJS  = main.o config.o read_file.o web.o task_queue.o
 TESTS = test-usage test-get
 
 

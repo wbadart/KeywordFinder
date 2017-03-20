@@ -29,10 +29,7 @@ int main(int argc, char *argv[]){
     for(auto x: sites.get_items())
         std::cout << "web:file:" << web.exec(x) << std::endl;
 
-    /* FileObj SitesFile("ExampleSites.txt"); */
-	/* SitesFile.print_items(); */
-
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 void usage(int status){

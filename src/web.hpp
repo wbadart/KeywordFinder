@@ -18,14 +18,16 @@
 #include <iostream>
 #include <string>
 
-class Web{
+#include "task_queue.hpp"
+
+class Web: public Task{
 
     public:
 
         // Default contructor, sets curl handle to easy_init()
         Web();
 
-        // Deconstructor. Runs easu_cleanup()
+        // Deconstructor. Runs easy_cleanup()
         ~Web();
 
         // Fetch data from "url". Returns result filename or "ERROR"
@@ -34,7 +36,7 @@ class Web{
     private:
 
         // Internal curl handle
-        CURL    *curl;
+        CURL *curl;
 
         // Exec result (non-zero means error: use easy_strerror)
         CURLcode result;
