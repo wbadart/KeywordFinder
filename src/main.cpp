@@ -14,6 +14,7 @@
 
 #include "read_file.h"
 #include "config.hpp"
+#include "web.hpp"
 
 void usage(int status=0);
 
@@ -24,6 +25,9 @@ int main(int argc, char *argv[]){
         usage();
 
     Config config(argc == 2 ? argv[1] : "./config");
+
+    Web web;
+    std::cout << "RES FILE: " << web.exec("http://example.com") << std::endl;
 
     /* FileObj SitesFile("ExampleSites.txt"); */
 	/* SitesFile.print_items(); */
