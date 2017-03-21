@@ -15,7 +15,7 @@ CXX  	  = /afs/nd.edu/user14/csesoft/new/bin/g++
 CXX_FLAGS = -Wall -ggdb -std=gnu++11
 
 LD 	     = /afs/nd.edu/user14/csesoft/new/bin/g++
-LD_FLAGS = -lcurl
+LD_FLAGS = -lcurl -static-libstdc++
 
 OBJS  = main.o config.o read_file.o web.o parser.o
 TESTS = test-usage test-get
