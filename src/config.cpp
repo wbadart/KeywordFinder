@@ -17,18 +17,15 @@ Config::Config(std::string fname):
       , SEARCH_FILE("Search.txt")
       , SITE_FILE("Sites.txt"){
 
-    std::cerr << "Parsing config file \"" << fname << "\"\n";
+    std::cerr << "conf:Parsing config file \"" << fname << "\"\n";
     std::ifstream fs(fname); std::string line;
 
-    do{
-
-        std::getline(fs, line);
-        if(!line.size()) break;
+    while(std::getline(fs, line)){
 
         std::string param, value; size_t i;
         for(i = 0; i < line.size() && line[i] != '='; i++)
             param += line[i];
-        for(i = i + 1; i < line.size() && line[i] != '\n'; i++)
+        for(i += 1; i < line.size() && line[i] != '\n'; i++)
             value += line[i];
 
         if(param == "PERIOD_FETCH")
@@ -41,21 +38,20 @@ Config::Config(std::string fname):
             SEARCH_FILE = value;
         else if(param == "SITE_FILE")
             SITE_FILE = value;
-        else std::cerr << "Parameter \"" << param
+        else std::cerr << "conf:Parameter \"" << param
                        << "\" not recognized. Ignoring\n";
-
-    } while(line.size());
+    }
 
     std::cerr << *this << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Config& c){
-    stream << "Program configuration:" << std::endl
-           << "\tPERIOD_FETCH: " << c.PERIOD_FETCH << std::endl
-           << "\tNUM_FETCH:    " << c.NUM_FETCH    << std::endl
-           << "\tNUM_PARSE:    " << c.NUM_PARSE    << std::endl
-           << "\tSEARCH_FILE:  " << c.SEARCH_FILE  << std::endl
-           << "\tSITE_FILE:    " << c.SITE_FILE    << std::endl;
+    stream << "conf:Program configuration:" << std::endl
+           << "conf:\tPERIOD_FETCH: " << c.PERIOD_FETCH << std::endl
+           << "conf:\tNUM_FETCH:    " << c.NUM_FETCH    << std::endl
+           << "conf:\tNUM_PARSE:    " << c.NUM_PARSE    << std::endl
+           << "conf:\tSEARCH_FILE:  " << c.SEARCH_FILE  << std::endl
+           << "conf:\tSITE_FILE:    " << c.SITE_FILE    << std::endl;
     return stream;
 }
 
