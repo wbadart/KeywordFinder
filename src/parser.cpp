@@ -21,11 +21,21 @@ Parser::~Parser(){}
 
 void Parser::exec(task_arg_t *args){
 
+    std::map<std::string, unsigned> result;
+
     // Load web_result and search terms into FileObjects
-    FileObj result(fname_result), terms(fname_search);
+    FileObj site(fname_result), terms(fname_search);
 
     // Convert to set in O(n)
-    std::set<std::string> web_words = result.to_set();
+    std::set<std::string> web_words = site.to_set();
+    for(std::string word: web_words)
+        result[word] = 0;
+
+    // Count occurrences of search terms
+    for(std::string term: terms.get_items())
+        result[term] += web_words.count(term);
+
+    args->result_parse = result;
 
 }
 

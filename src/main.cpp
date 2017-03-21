@@ -13,8 +13,10 @@
 #include <iostream>
 #include <string>
 
-#include "read_file.h"
 #include "config.hpp"
+#include "parser.hpp"
+#include "read_file.h"
+#include "task_queue.hpp"
 #include "web.hpp"
 
 void usage(int status=0);
@@ -27,8 +29,16 @@ int main(int argc, char *argv[]){
 
     Config config(argc == 2 ? argv[1] : "./config");
     FileObj sites(config.SITE_FILE);
-    /* for(auto x: sites.get_items()) */
-    /*     std::cout << "web:file:" << (Web web(x)).exec() << std::endl; */
+
+    Web web("http://example.com");
+    task_arg_t res_web, res_parse;
+    web.exec(&res_web);
+    Parser parse(res_web.result_web, config.SITE_FILE);
+    parse.exec(&res_parse);
+
+    for(auto it: res_parse.result_parse)
+        std::cerr << it.first  << ":"
+                  << it.second << std::endl;
 
     return EXIT_SUCCESS;
 }

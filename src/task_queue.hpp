@@ -11,11 +11,14 @@
 #ifndef _H_TASKQUEUE
 #define _H_TASKQUEUE
 
+#include <map>
 #include <pthread.h>
 #include <queue>
 #include <string>
 
 typedef struct _task_arg{
+    std::map<std::string, unsigned> result_parse;
+    std::string                     result_web;
 } task_arg_t;
 
 class Task{
@@ -44,8 +47,8 @@ class TaskQueue{
         /* void push(Task); */
 
     private:
-        std::queue<Task> inbox;
-        std::queue<Task> outbox;
+        /* std::queue<Task> inbox; */
+        /* std::queue<Task> outbox; */
         pthread_mutex_t  lock;
 };
 

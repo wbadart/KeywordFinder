@@ -38,6 +38,7 @@ void Web::exec(task_arg_t *args){
                         + curl_easy_strerror(result))
               << std::endl;
 
+    args->result_web = std::string(fname);
     /* return std::string(fname); */
 }
 

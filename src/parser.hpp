@@ -12,6 +12,7 @@
 #ifndef _H_PARSER
 #define _H_PARSER
 
+#include <map>
 #include <set>
 #include <string>
 

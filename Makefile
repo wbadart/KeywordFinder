@@ -11,10 +11,10 @@
 
 OUT = site-tester
 
-CXX  	  = g++
-CXX_FLAGS = -Wall -ggdb
+CXX  	  = /afs/nd.edu/user14/csesoft/new/bin/g++
+CXX_FLAGS = -Wall -ggdb -std=gnu++11
 
-LD 	     = g++
+LD 	     = /afs/nd.edu/user14/csesoft/new/bin/g++
 LD_FLAGS = -lcurl
 
 OBJS  = main.o config.o read_file.o web.o parser.o
