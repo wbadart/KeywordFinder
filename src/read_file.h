@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
+#include <map>
 #include <set>
 #include <sstream>
 #include <string>
@@ -14,6 +15,7 @@ class FileObj {
 		~FileObj();
 		vector<string> get_items();
         set<string> to_set();
+        map<string, unsigned> to_count(set<string> terms);
 		void print_items();
 	private:
 		void load_items();
