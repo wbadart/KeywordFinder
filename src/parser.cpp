@@ -9,8 +9,8 @@
  * created: MAR 2017
  */
 
-#include "./read_file.h"
-#include "./parser.hpp"
+#include "file_object.hpp"
+#include "parser.hpp"
 
 Parser::Parser(std::string _fname_result
              , std::string _fname_search):
@@ -22,8 +22,24 @@ Parser::~Parser(){}
 void Parser::exec(task_arg_t *args){
 
     // Load web_result and search terms into FileObjects
-    FileObj site(fname_result), terms(fname_search);
-    args->result_parse = site.to_count(terms.to_set());
+    FileObject site(fname_result), terms_f(fname_search);
+    std::set<std::string> terms = terms_f.get_tokens();
 
+    std::cerr << "parse:Searching for terms from \""
+              << fname_search << "\" in \"" << fname_result
+              << "\"" << std::endl;
+    for(std::string t: terms)
+        std::cerr << "parse:\tterm:" << t << std::endl;
+
+    // Initialize the result data structure
+    std::map<std::string, unsigned> result;
+    for(std::string t: terms) result[t] = 0;
+
+    // For each word on each line, inc result if term found
+    for(std::string line: site.get_lines())
+        for(std::string tok: terms_f.get_tokens(line))
+            if(terms.count(tok)) result[tok]++;
+
+    args->result_parse = result;
 }
 

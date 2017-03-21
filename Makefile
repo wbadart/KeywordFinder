@@ -11,14 +11,14 @@
 
 OUT = site-tester
 
-CXX  	  = /afs/nd.edu/user14/csesoft/new/bin/g++
+CXX  	  = g++
 CXX_FLAGS = -Wall -ggdb -std=gnu++11
 
-LD 	     = /afs/nd.edu/user14/csesoft/new/bin/g++
+LD 	     = g++
 LD_FLAGS = -lcurl -static-libstdc++
 
-OBJS  = main.o config.o read_file.o web.o parser.o
-TESTS = test-usage test-get
+OBJS  = main.o config.o file_object.o web.o parser.o
+TESTS = test-usage test-get test-parse
 
 
 all: $(OBJS)
@@ -33,11 +33,18 @@ clean:
 test: $(TESTS)
 	@echo "Tests complete."
 
-test-usage: all
+test-mkfiles:
+	@echo "http://example.com" > tmp_sites
+	@echo "example" > tmp_search
+	@echo "SITE_FILE=tmp_sites" > tmp_config
+	@echo "SEARCH_FILE=tmp_search" >> tmp_config
+
+test-usage: all test-mkfiles
 	./$(OUT) --help
 
-test-get: all
-	@echo "http://example.com" > tmp_sites
-	@echo "SITE_FILE=tmp_sites" > tmp_config
+test-get: all test-mkfiles
 	./$(OUT) tmp_config 2> /dev/null | awk -F: '/web_result/ { print $$3 }' | xargs test -s
+
+test-parse: all test-mkfiles
+	./$(OUT) tmp_config 2> /dev/null
 
