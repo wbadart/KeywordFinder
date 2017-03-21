@@ -1,8 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-
 #include "read_file.h"
 
 using namespace std;
