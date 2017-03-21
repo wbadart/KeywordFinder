@@ -19,19 +19,20 @@
 #include <string>
 
 #include "task_queue.hpp"
+class Task;
 
 class Web: public Task{
 
     public:
 
         // Default contructor, sets curl handle to easy_init()
-        Web();
+        Web(std::string _url);
 
         // Deconstructor. Runs easy_cleanup()
         ~Web();
 
         // Fetch data from "url". Returns result filename or "ERROR"
-        std::string exec(std::string url);
+        void exec(task_arg_t *args);
 
     private:
 
@@ -40,6 +41,9 @@ class Web: public Task{
 
         // Exec result (non-zero means error: use easy_strerror)
         CURLcode result;
+
+        // URL of target resource
+        std::string url;
 };
 
 #endif

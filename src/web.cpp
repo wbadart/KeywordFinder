@@ -10,10 +10,12 @@
 
 #include "./web.hpp"
 
-Web::Web():curl(curl_easy_init()){}
+Web::Web(std::string _url):
+        curl(curl_easy_init())
+      , url(_url){}
 Web::~Web(){curl_easy_cleanup(curl);}
 
-std::string Web::exec(std::string url){
+void Web::exec(task_arg_t *args){
 
     // Set target URL and redirect behavior (follow redirect)
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -36,6 +38,6 @@ std::string Web::exec(std::string url){
                         + curl_easy_strerror(result))
               << std::endl;
 
-    return std::string(fname);
+    /* return std::string(fname); */
 }
 

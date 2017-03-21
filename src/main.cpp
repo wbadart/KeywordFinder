@@ -8,6 +8,7 @@
  * created: MAR 2017
  */
 
+#include <csignal>
 #include <cstdlib>  // exit
 #include <iostream>
 #include <string>
@@ -24,10 +25,10 @@ int main(int argc, char *argv[]){
                  ||  std::string(argv[1]) == "--help"))
         usage();
 
-    Config config(argc == 2 ? argv[1] : "./config"); Web web;
+    Config config(argc == 2 ? argv[1] : "./config");
     FileObj sites(config.SITE_FILE);
-    for(auto x: sites.get_items())
-        std::cout << "web:file:" << web.exec(x) << std::endl;
+    /* for(auto x: sites.get_items()) */
+    /*     std::cout << "web:file:" << (Web web(x)).exec() << std::endl; */
 
     return EXIT_SUCCESS;
 }

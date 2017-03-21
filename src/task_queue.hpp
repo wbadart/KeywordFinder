@@ -15,15 +15,20 @@
 #include <queue>
 #include <string>
 
-template<typename T>
+typedef struct _task_arg{
+} task_arg_t;
+
 class Task{
 
     public:
-        virtual void exec(std::string);
+
+        // This should be the time consuming work
+        // done by the thread
+        virtual void exec(task_arg_t*) = 0;
+
     private:
 };
 
-template<typename in_t, typename out_t>
 class TaskQueue{
 
     public:
@@ -36,12 +41,12 @@ class TaskQueue{
         // Deconstructor, nothing special
         ~TaskQueue(){}
 
-        void push(Task<in_t>);
+        /* void push(Task); */
 
     private:
-        std::queue<in_t>  inbox;
-        std::queue<out_t> outbox;
-        pthread_mutex_t   lock;
+        std::queue<Task> inbox;
+        std::queue<Task> outbox;
+        pthread_mutex_t  lock;
 };
 
 #endif
