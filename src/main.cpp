@@ -34,10 +34,7 @@ int main(int argc, char *argv[]){
     Web web("http://example.com");
     web.exec(&res);
 
-    FileObject web_res(res.result_web);
-    std::cout << std::endl << web_res << std::endl;
-
-    Parser parse(res.result_web, config.SITE_FILE);
+    Parser parse(res.result_web, config.SEARCH_FILE);
     parse.exec(&res);
 
     for(auto it: res.result_parse)

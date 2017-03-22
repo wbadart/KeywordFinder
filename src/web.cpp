@@ -31,14 +31,13 @@ void Web::exec(task_arg_t *args){
     result = curl_easy_perform(curl);
     fclose(file);
 
-    std::cerr << (result == CURLE_OK
-                    ? std::string("web:curl_easy_perform() succeeded:")
+    std::cout << (result == CURLE_OK
+                    ? std::string("web:`curl_easy_perform()' succeeded:")
                         + fname
-                    : std::string("web:curl_easy_perform() failed: ")
+                    : std::string("web:`curl_easy_perform()' failed: ")
                         + curl_easy_strerror(result))
               << std::endl;
 
     args->result_web = std::string(fname);
-    /* return std::string(fname); */
 }
 
