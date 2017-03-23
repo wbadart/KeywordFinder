@@ -11,7 +11,13 @@
 #include "file_object.hpp"
 
 FileObject::FileObject(std::string _fname):fname(_fname){
-    std::ifstream ifs(fname); std::string line;
+    std::ifstream ifs(fname);
+    //check for errors opening file
+    if((ifs.rdstate() & std::ifstream::failbit) != 0){
+        std::cerr << "Error opening " << fname << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    std::string line;
     // If we need to strip the trailing whitespace:
     /* line.erase(line.find_last_not_of(" \n\r\t")+1); */
     while(getline(ifs, line))
@@ -20,7 +26,10 @@ FileObject::FileObject(std::string _fname):fname(_fname){
 }
 
 FileObject::~FileObject(){}
-std::vector<std::string> FileObject::get_lines(){return lines;}
+
+std::vector<std::string> FileObject::get_lines(){
+    return lines;
+}
 
 std::set<std::string> FileObject::get_tokens(){
     std::set<std::string> result;
