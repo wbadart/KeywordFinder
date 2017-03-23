@@ -38,11 +38,17 @@ void Parser::exec(task_arg_t *args){
         for(std::string tok: terms_f.get_tokens(line))
             if(terms.count(tok)) result[tok]++;
 
+    // Create and open temporary result file
+    char *fname = strdup("/tmp/parse_resultXXXXXX");
+    int fd = mkstemp(fname); close(fd);
+    std::ofstream fs(fname);
+
     for(auto pair: result)
-        std::cout << "parse:Found " << pair.second
-                  << " occurrences of " << pair.first
+        fs << url << "," << pair.first
+                  << "," << pair.second
                   << std::endl;
 
-    args->result_parse = result;
+    fs.close();
+    args->result = std::string(fname);
 }
 

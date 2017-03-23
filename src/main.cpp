@@ -16,6 +16,7 @@
 
 #include "config.hpp"
 #include "file_object.hpp"
+#include "parser.hpp"
 #include "task_queue.hpp"
 #include "web.hpp"
 
@@ -68,7 +69,8 @@ int main(int argc, char *argv[]){
         // Load up sites into queue and let
         //     everything just fall into place
         for(std::string site: sites)
-            fetch.push(new Web(site));
+            fetch.push<Web>(site);
+        fetch.run<Parser>();
     }
 
     // Clean up and go home

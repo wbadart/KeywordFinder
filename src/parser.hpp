@@ -12,7 +12,9 @@
 #ifndef _H_PARSER
 #define _H_PARSER
 
-#include <map>
+#include <cstring>  // strdup
+#include <unistd.h> // close
+#include <iostream>
 #include <set>
 #include <string>
 
@@ -41,6 +43,9 @@ class Parser: public Task{
 
         // Name of the search term file
         std::string fname_search;
+
+        // URL corresponding to result file
+        std::string url;
 };
 
 #endif
