@@ -21,7 +21,6 @@
 #include "web.hpp"
 
 void usage(int status=0);
-void *thread_proxy(task_arg_t*);
 void *thread_function_proxy(void *args);
 void alarm_handler(int);
 void intHandler(int);
@@ -48,10 +47,9 @@ int main(int argc, char *argv[]){
     Config config(argc == 2 ? argv[1] : "./config");
     //set up alarm handler
     signal(SIGALRM, alarm_handler);
-    alarm(config.PERIOD_FETCH);
+    alarm(config->PERIOD_FETCH);
     //set up interrupt handler
     signal(SIGINT, intHandler);
-    //while(KeepLooping)
     //create sites file object
     FileObject sites(config.SITE_FILE);
     task_arg_t res;
@@ -66,42 +64,43 @@ int main(int argc, char *argv[]){
      *  for(int i = 0; i < nthreads; i++)
      *      pthread_join(threads[i], NULL);
      */
-    pthread_t *fetch_threads = new pthread_t[
-                sizeof(pthread_t) * config.NUM_FETCH ]
-            , *parse_threads = new pthread_t[
-                sizeof(pthread_t) * config.NUM_PARSE ];
+    while(KeepLooping) {
+        pthread_t *fetch_threads = new pthread_t[
+                    sizeof(pthread_t) * config.NUM_FETCH ]
+                , *parse_threads = new pthread_t[
+                    sizeof(pthread_t) * config.NUM_PARSE ];
 
-    task_arg_t *fetch_args = new task_arg_t[
-                sizeof(task_arg_t) * config.NUM_FETCH ]
-             , *parse_args = new task_arg_t[
-                sizeof(task_arg_t) * config.NUM_PARSE ];
+        task_arg_t *fetch_args = new task_arg_t[
+                    sizeof(task_arg_t) * config.NUM_FETCH ]
+                 , *parse_args = new task_arg_t[
+                    sizeof(task_arg_t) * config.NUM_PARSE ];
 
-    fetchers = new Web[sites.size()];
-    for(size_t i = 0; i < sites.size(); i++)
-        fetchers[i].set_url(sites[i]);
+        fetchers = new Web[sites.size()];
+        for(size_t i = 0; i < sites.size(); i++)
+            fetchers[i].set_url(sites[i]);
 
-    for(size_t i = 0; i < config.NUM_FETCH; i++){
-        fetch_args[i].target = fetchers + i;
-        pthread_create(fetch_threads + i
-                     , NULL
-                     , thread_function_proxy
-                     , fetch_args + i
-        );
+        for(size_t i = 0; i < config.NUM_FETCH; i++){
+            fetch_args[i].target = fetchers + i;
+            pthread_create(fetch_threads + i
+                         , NULL
+                         , thread_function_proxy
+                         , fetch_args + i
+            );
+        }
+
+        Web web("http://example.com");
+        web.exec(&res);
+
+        Parser parse(res.result_web, config.SEARCH_FILE);
+        parse.exec(&res);
+
+        for(auto it: res.result_parse)
+            std::cerr << it.first  << ":"
+                      << it.second << std::endl;
+
+        delete [] fetch_threads; delete [] parse_threads;
+        delete [] fetch_args;    delete [] parse_args;
     }
-
-    Web web("http://example.com");
-    web.exec(&res);
-
-    Parser parse(res.result_web, config.SEARCH_FILE);
-    parse.exec(&res);
-
-    for(auto it: res.result_parse)
-        std::cerr << it.first  << ":"
-                  << it.second << std::endl;
-
-    delete [] fetch_threads; delete [] parse_threads;
-    delete [] fetch_args;    delete [] parse_args;
-
     return EXIT_SUCCESS;
 }
 
@@ -123,11 +122,12 @@ void *thread_function_proxy(void* args){
 
 void alarm_handler(int s) {
     std::cout << "new period starting" << std::endl;
-    alarm(180);
+    alarm(config->PERIOD_FETCH);
     signal(SIGALRM, alarm_handler);
 }
 
 void intHandler(int s){
     KeepLooping = 0;
     //broadcast all the current threads
+    //pthread_cond_broadcast(pthread_cond_t *cond);
 }
