@@ -32,10 +32,7 @@ class Web: public Task{
         // Deconstructor. Runs easy_cleanup()
         ~Web();
 
-        // Set url after construction
-        void set_url(std::string _url);
-
-        // Fetch data from "url". Returns result filename or "ERROR"
+        // Fetch data from "url"
         void exec(task_arg_t *args);
 
     private:
@@ -43,7 +40,7 @@ class Web: public Task{
         // Internal curl handle
         CURL *curl;
 
-        // Exec result (non-zero means error: use easy_strerror)
+        // Exec result (non-zero means error)
         CURLcode result;
 
         // URL of target resource

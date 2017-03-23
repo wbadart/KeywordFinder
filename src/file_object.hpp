@@ -46,6 +46,10 @@ class FileObject{
         // Random access
         std::string operator[](size_t i);
 
+        // Other vector-like methods
+        std::vector<std::string>::iterator begin();
+        std::vector<std::string>::iterator end();
+
 	private:
 
         // Name of corresponding file

@@ -12,18 +12,22 @@
 
 Web::Web(std::string _url):
         curl(curl_easy_init())
-      , url(_url){}
-Web::~Web(){curl_easy_cleanup(curl);}
+      , url(_url){
+    std::cerr << "web:Constructing with url \""
+              << url << "\"" << std::endl;
+}
 
-void Web::set_url(std::string _url){
-    url = url;
+Web::~Web(){
+    std::cerr << "web:Deconstructing with url \""
+              << url << "\"" << std::endl;
+    curl_easy_cleanup(curl);
 }
 
 void Web::exec(task_arg_t *args){
 
     // Set target URL and redirect behavior (follow redirect)
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    // curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     std::cerr << "web:Fetching URL \"" << url << "\"\n";
 
     // Create and open temporary result file

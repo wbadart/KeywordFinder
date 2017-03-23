@@ -25,8 +25,8 @@ class Parser: public Task{
     public:
 
         // Constructor: takes target web_result fname
-        Parser(std::string _fname_result
-             , std::string _fname_search);
+        Parser(std::string _fname_result=""
+             , std::string _fname_search="");
 
         // Deconstructor. Yup.
         ~Parser();

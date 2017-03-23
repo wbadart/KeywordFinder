@@ -11,7 +11,6 @@
 #include <csignal>  // signal
 #include <cstdlib>  // exit
 #include <iostream>
-#include <pthread.h>
 #include <string>
 
 #include "config.hpp"
@@ -22,6 +21,9 @@
 
 void usage(int status=0);
 void *thread_proxy(task_arg_t*);
+void *thread_function_proxy(void *args);
+void alarm_handler(int);
+void intHandler(int);
 
 Web *fetchers;
 char KeepLooping = 1;
@@ -116,6 +118,10 @@ void usage(int status){
 void *thread_proxy(task_arg_t* args){
     //(task_arg_t *)args->target->exec(args);
     args->target->exec(args);
+
+void *thread_function_proxy(void* args){
+    task_arg_t *cast_args = (task_arg_t*)args;
+    cast_args->target->exec(cast_args);
     return nullptr;
 }
 
