@@ -42,7 +42,7 @@ Config::Config(std::string fname):
                        << "\" not recognized. Ignoring\n";
     }
 
-    std::cerr << *this << std::endl;
+    std::cerr << *this;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Config& c){

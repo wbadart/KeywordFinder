@@ -37,19 +37,17 @@ class TaskQueue{
     public:
 
         // Default constructor (initialize lock)
-        TaskQueue(){
-            /* pthread_init_lock(&lock, nullptr); */
-        }
+        TaskQueue(size_t); /* pthread_init_lock(&lock, nullptr); */
 
         // Deconstructor, nothing special
-        ~TaskQueue(){}
+        ~TaskQueue();
 
-        /* void push(Task); */
+        void push(Task*);
+        Task* pop();
 
     private:
-        /* std::queue<Task> inbox; */
-        /* std::queue<Task> outbox; */
-        pthread_mutex_t  lock;
+        std::queue<Task*> q;
+        size_t NUM_THREADS;
 };
 
 #endif
