@@ -15,6 +15,10 @@ Web::Web(std::string _url):
       , url(_url){}
 Web::~Web(){curl_easy_cleanup(curl);}
 
+void Web::set_url(std::string _url){
+    url = url;
+}
+
 void Web::exec(task_arg_t *args){
 
     // Set target URL and redirect behavior (follow redirect)
