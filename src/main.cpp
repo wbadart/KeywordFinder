@@ -8,7 +8,7 @@
  * created: MAR 2017
  */
 
-#include <csignal>
+#include <csignal>  // signal
 #include <cstdlib>  // exit
 #include <iostream>
 #include <pthread.h>
@@ -24,16 +24,16 @@ void usage(int status=0);
 void *thread_proxy(task_arg_t*);
 
 Web *fetchers;
+char KeepLooping = 1;
 
 int main(int argc, char *argv[]){
-
+    //verify correct number of arguments
     if(argc == 2 && (std::string(argv[1]) == "-h"
                  ||  std::string(argv[1]) == "--help"))
         usage();
     /*
      *  signal(____, ____)
      *  while(keep looping) {
-     *      signal -> keep looping = 0
      *      lock
      *      while(____)
      *  }
@@ -43,9 +43,26 @@ int main(int argc, char *argv[]){
      *          pthread_cond_broadcast
      */
     Config config(argc == 2 ? argv[1] : "./config");
+    //set up alarm handler
+    signal(SIGALRM, alarm_handler);
+    alarm(config.PERIOD_FETCH);
+    //set up interrupt handler
+    signal(SIGINT, intHandler);
+    //while(KeepLooping)
+    //create sites file object
     FileObject sites(config.SITE_FILE);
     task_arg_t res;
-
+    /*
+     *  struct thread_args** args = malloc(sizeof(struct thread_args) * nthreads);
+     *  pthread_t * threads = malloc(sizeof(pthread_t) * nthreads);
+     *  for(int i = 0; i < nthreads; i++) {
+     *      args[i] = malloc(sizeof(struct thread_args));
+     *      args[i]->data = value...
+     *      pthread_create(&threads[i], NULL, (void *) thread_proxy, (void *) args[i]);
+     *  }
+     *  for(int i = 0; i < nthreads; i++)
+     *      pthread_join(threads[i], NULL);
+     */
     pthread_t *fetch_threads = new pthread_t[
                 sizeof(pthread_t) * config.NUM_FETCH ]
             , *parse_threads = new pthread_t[
@@ -94,9 +111,21 @@ void usage(int status){
               << std::endl;
     exit(status);
 }
-
+//args might have to be void * and then convert back to struct * inside func
+//void *thread_proxy(void * args){
 void *thread_proxy(task_arg_t* args){
+    //(task_arg_t *)args->target->exec(args);
     args->target->exec(args);
     return nullptr;
 }
 
+void alarm_handler(int s) {
+    std::cout << "new period starting" << std::endl;
+    alarm(180);
+    signal(SIGALRM, alarm_handler);
+}
+
+void intHandler(int s){
+    KeepLooping = 0;
+    //broadcast all the current threads
+}
