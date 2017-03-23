@@ -12,6 +12,7 @@
 
 FileObject::FileObject(std::string _fname):fname(_fname){
     std::ifstream ifs(fname);
+    length = 0;
     //check for errors opening file
     if((ifs.rdstate() & std::ifstream::failbit) != 0){
         std::cerr << "Error opening " << fname << std::endl;
@@ -20,8 +21,12 @@ FileObject::FileObject(std::string _fname):fname(_fname){
     std::string line;
     // If we need to strip the trailing whitespace:
     /* line.erase(line.find_last_not_of(" \n\r\t")+1); */
-    while(getline(ifs, line))
+    while(getline(ifs, line)){
+        //skip empty lines
+        if(line.empty())
+            continue;
         lines.push_back(line);
+    }
     ifs.close();
 }
 
