@@ -30,11 +30,25 @@ Config::Config(std::string fname):
 
         if(param == "PERIOD_FETCH")
             PERIOD_FETCH = std::stoi(value);
-        else if(param == "NUM_FETCH")
+        else if(param == "NUM_FETCH"){
             NUM_FETCH = std::stoi(value);
-        else if(param == "NUM_PARSE")
+            if(NUM_FETCH > 8) {
+                std::cerr << "You can only have up to 8 Fetching Threads." << std::endl;
+                NUM_FETCH = 8;
+            } else if(NUM_FETCH < 1) {
+                std::cerr << "You need at least 1 Fetching Thread." << std::endl;
+                NUM_FETCH = 1;
+            }
+        } else if(param == "NUM_PARSE"){
             NUM_PARSE = std::stoi(value);
-        else if(param == "SEARCH_FILE")
+            if(NUM_PARSE > 8) {
+                std::cerr << "You can only have up to 8 Parsing Threads." << std::endl;
+                NUM_PARSE = 8;
+            } else if(NUM_PARSE < 1) {
+                std::cerr << "You need at least 1 Parsing Thread." << std::endl;
+                NUM_PARSE = 1;
+            }
+        } else if(param == "SEARCH_FILE")
             SEARCH_FILE = value;
         else if(param == "SITE_FILE")
             SITE_FILE = value;

@@ -9,7 +9,6 @@
  * created: MAR 2017
  */
 
-#include "file_object.hpp"
 #include "parser.hpp"
 
 Parser::Parser(std::string _fname_result

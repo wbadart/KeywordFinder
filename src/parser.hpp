@@ -17,6 +17,7 @@
 #include <string>
 
 #include "task_queue.hpp"
+#include "file_object.hpp"
 class Task;
 
 class Parser: public Task{

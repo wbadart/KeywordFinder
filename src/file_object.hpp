@@ -12,6 +12,7 @@
 #ifndef _H_FILEOBJECT
 #define _H_FILEOBJECT
 
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <iterator>

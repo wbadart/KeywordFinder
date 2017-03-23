@@ -40,12 +40,10 @@ class TaskQueue{
     public:
 
         // Default constructor (initialize lock)
-        TaskQueue(){
-            /* pthread_init_lock(&lock, nullptr); */
-        }
+        TaskQueue(size_t); /* pthread_init_lock(&lock, nullptr); */
 
         // Deconstructor, nothing special
-        ~TaskQueue(){}
+        ~TaskQueue();
 
         // Add task, broadcast task ready
         void push(std::string fname_or_url);
