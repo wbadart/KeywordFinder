@@ -52,3 +52,8 @@ std::ostream& operator<<(std::ostream& stream, const FileObject& f){
     return stream;
 }
 
+std::vector<std::string>::iterator FileObject::begin(){
+    return lines.begin();}
+std::vector<std::string>::iterator FileObject::end(){
+    return lines.end();}
+

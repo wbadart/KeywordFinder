@@ -47,12 +47,40 @@ class TaskQueue{
         // Deconstructor, nothing special
         ~TaskQueue(){}
 
-        /* void push(Task); */
+        // Add task, broadcast task ready
+        void push(std::string fname_or_url);
 
     private:
         /* std::queue<Task> inbox; */
         /* std::queue<Task> outbox; */
-        pthread_mutex_t  lock;
+};
+
+class Worker{
+
+    public:
+
+        // Constructor allocates threads and args
+        Worker(unsigned _MAX_THREADS, TaskQueue *_queue);
+
+        // Deconstructor taketh away
+        ~Worker();
+
+    private:
+
+        // Handles task ready broadcast; waits until
+        //   active_threads < MAX and then spawns thread for task
+        void handle_task_ready();
+
+        // Track active threads and max threads
+        unsigned MAX_THREADS;
+        unsigned active_threads;
+
+        // Thread and argument arrays
+        pthread_t  *threads;
+        task_arg_t *args;
+
+        // Queue to grab tasks from
+        TaskQueue *queue;
 };
 
 #endif
