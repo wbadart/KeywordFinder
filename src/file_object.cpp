@@ -38,6 +38,14 @@ std::vector<std::string> FileObject::get_tokens(std::string line){
       , std::istream_iterator<std::string>{}};
 }
 
+size_t FileObject::size(){
+    return lines.size();
+}
+
+std::string FileObject::operator[](size_t i){
+    return lines[i];
+}
+
 std::ostream& operator<<(std::ostream& stream, const FileObject& f){
     for(std::string line: f.lines)
         stream << line << std::endl;

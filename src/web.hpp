@@ -26,10 +26,13 @@ class Web: public Task{
     public:
 
         // Default contructor, sets curl handle to easy_init()
-        Web(std::string _url);
+        Web(std::string _url="");
 
         // Deconstructor. Runs easy_cleanup()
         ~Web();
+
+        // Set url after construction
+        void set_url(std::string _url);
 
         // Fetch data from "url". Returns result filename or "ERROR"
         void exec(task_arg_t *args);

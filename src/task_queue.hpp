@@ -16,7 +16,10 @@
 #include <queue>
 #include <string>
 
+class Task;
+
 typedef struct _task_arg{
+    Task* target;
     std::map<std::string, unsigned> result_parse;
     std::string                     result_web;
 } task_arg_t;

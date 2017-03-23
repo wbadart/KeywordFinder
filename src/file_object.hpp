@@ -39,6 +39,12 @@ class FileObject{
         std::set<std::string> get_tokens();
         std::vector<std::string> get_tokens(std::string);
 
+        // Get number of lines
+        size_t size();
+
+        // Random access
+        std::string operator[](size_t i);
+
 	private:
 
         // Name of corresponding file
