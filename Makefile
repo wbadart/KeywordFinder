@@ -17,7 +17,7 @@ CXX_FLAGS = -Wall -ggdb -std=gnu++11
 LD 	     = g++
 LD_FLAGS = -lcurl -lpthread -static-libstdc++
 
-OBJS  = main.o config.o file_object.o web.o parser.o
+OBJS  = main.o config.o file_object.o web.o parser.o task_queue.o
 TESTS = test-usage test-fetch test-parse
 
 
