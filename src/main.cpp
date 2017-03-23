@@ -21,13 +21,11 @@
 #include "web.hpp"
 
 void usage(int status=0);
-void *thread_function_proxy(void *args);
 void handle_SIGALRM(int);
 void handle_SIGINT(int);
 
 bool g_keep_looping = true;
 bool g_trigger_period = false;
-
 Config *config;
 
 int main(int argc, char *argv[]){
@@ -40,28 +38,7 @@ int main(int argc, char *argv[]){
             && (std::string(argv[1]) == "-h"
             ||  std::string(argv[1]) == "--help"))
         usage();
-    /*
-     *  signal(____, ____)
-     *  while(keep looping) {
-     *      lock
-     *      while(____)
-     *  }
-     *  signal:
-     *      keep looping = 0
-     *      for all the threads that happen to be out there:
-     *          pthread_cond_broadcast
-     */
-    /*
-     *  struct thread_args** args = malloc(sizeof(struct thread_args) * nthreads);
-     *  pthread_t * threads = malloc(sizeof(pthread_t) * nthreads);
-     *  for(int i = 0; i < nthreads; i++) {
-     *      args[i] = malloc(sizeof(struct thread_args));
-     *      args[i]->data = value...
-     *      pthread_create(&threads[i], NULL, (void *) thread_proxy, (void *) args[i]);
-     *  }
-     *  for(int i = 0; i < nthreads; i++)
-     *      pthread_join(threads[i], NULL);
-     */
+
     // Load program configutaion, use default
     //     if command line argument not given
     config = new Config(argc == 2 ? argv[1] : "./config");
@@ -86,11 +63,14 @@ int main(int argc, char *argv[]){
         // If we're ready for the next cycle to begin...
         if(!g_trigger_period) continue;
         g_trigger_period = false;
+        std::cerr << "main:Starting new period" << std::endl;
 
         // Load up sites into queue and let
         //     everything just fall into place
-        for(std::string site: sites)
-            fetch.push<Web>(site);
+        // Template param is the type of task being exec'd
+        for(std::string site: sites) fetch.push<Web>(site);
+
+        // Template param is the next Task type in the pipeline
         fetch.run<Parser>();
     }
 
@@ -110,13 +90,13 @@ void usage(int status){
 }
 
 void handle_SIGALRM(int s) {
-    std::cout << "main:new period starting" << std::endl;
     g_trigger_period = true;
     alarm(config->PERIOD_FETCH);
 }
 
 void handle_SIGINT(int s){
     g_keep_looping = false;
+    std::cout << "main:Goodbye!" << std::endl;
     //broadcast all the current threads
     //pthread_cond_broadcast(pthread_cond_t *cond);
 }

@@ -10,7 +10,7 @@
 
 #include "task_queue.hpp"
 
-void *thread_function_proxy(void *args);
+// Initialize static members
 pthread_cond_t  TaskQueue::cond;
 pthread_mutex_t TaskQueue::mux;
 
