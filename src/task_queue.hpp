@@ -39,37 +39,24 @@ class TaskQueue{
 
     public:
 
-        // Default constructor (initialize lock)
-        TaskQueue(size_t); /* pthread_init_lock(&lock, nullptr); */
-
-        // Deconstructor, nothing special
-        ~TaskQueue();
-
-        // Add task, broadcast task ready
-        void push(std::string fname_or_url);
-
-    private:
-        /* std::queue<Task> inbox; */
-        /* std::queue<Task> outbox; */
-};
-
-class Worker{
-
-    public:
-
         // Constructor allocates threads and args
-        Worker(unsigned _MAX_THREADS, TaskQueue *_queue);
+        TaskQueue(unsigned _MAX_THREADS);
 
         // Deconstructor taketh away
-        ~Worker();
+        ~TaskQueue();
+
+        // Add task, broadcast task ready (TODO: delete t)
+        void push(Task *t);
+
+        // Set next queue member
+        void pipe_to(TaskQueue*);
 
     private:
 
-        // Handles task ready broadcast; waits until
-        //   active_threads < MAX and then spawns thread for task
-        void handle_task_ready();
+        // Queue backend
+        std::queue<Task*> queue;
 
-        // Track active threads and max threads
+        // Track # of live threads and max allowed threads
         unsigned MAX_THREADS;
         unsigned active_threads;
 
@@ -77,8 +64,12 @@ class Worker{
         pthread_t  *threads;
         task_arg_t *args;
 
-        // Queue to grab tasks from
-        TaskQueue *queue;
+        // Next queue in pipeline; task result target
+        TaskQueue *next;
+
+        // Conditional variable to lock shared data structure
+        pthread_cond_t  cond;
+        pthread_mutex_t mux;
 };
 
 #endif
