@@ -9,8 +9,8 @@
  * created: MAR 2017
  */
 
-#include "./read_file.h"
-#include "./parser.hpp"
+#include "read_file.h"
+#include "parser.hpp"
 
 Parser::Parser(std::string _fname_result
              , std::string _fname_search):
