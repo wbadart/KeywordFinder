@@ -21,7 +21,7 @@
 #include "web.hpp"
 
 void usage(int status=0);
-
+void *thread_function_proxy(void *args);
 void handle_SIGALRM(int);
 void handle_SIGINT(int);
 
@@ -40,7 +40,28 @@ int main(int argc, char *argv[]){
             && (std::string(argv[1]) == "-h"
             ||  std::string(argv[1]) == "--help"))
         usage();
-
+    /*
+     *  signal(____, ____)
+     *  while(keep looping) {
+     *      lock
+     *      while(____)
+     *  }
+     *  signal:
+     *      keep looping = 0
+     *      for all the threads that happen to be out there:
+     *          pthread_cond_broadcast
+     */
+    /*
+     *  struct thread_args** args = malloc(sizeof(struct thread_args) * nthreads);
+     *  pthread_t * threads = malloc(sizeof(pthread_t) * nthreads);
+     *  for(int i = 0; i < nthreads; i++) {
+     *      args[i] = malloc(sizeof(struct thread_args));
+     *      args[i]->data = value...
+     *      pthread_create(&threads[i], NULL, (void *) thread_proxy, (void *) args[i]);
+     *  }
+     *  for(int i = 0; i < nthreads; i++)
+     *      pthread_join(threads[i], NULL);
+     */
     // Load program configutaion, use default
     //     if command line argument not given
     config = new Config(argc == 2 ? argv[1] : "./config");
@@ -97,5 +118,6 @@ void handle_SIGALRM(int s) {
 void handle_SIGINT(int s){
     g_keep_looping = false;
     //broadcast all the current threads
+    //pthread_cond_broadcast(pthread_cond_t *cond);
 }
 
