@@ -26,6 +26,7 @@ void handle_SIGINT(int);
 
 bool g_keep_looping = true;
 bool g_trigger_period = false;
+bool g_signaled = false;
 
 Config *config;
 
@@ -34,11 +35,11 @@ int main(int argc, char *argv[]){
     // Verify correct number of arguments, check for help flag
     if(argc > 3){
         std::cerr << "error:Too many arguments" << std::endl;
-        exit(1);
+        usage(1);
     } else if(argc == 2
             && (std::string(argv[1]) == "-h"
             ||  std::string(argv[1]) == "--help"))
-        usage();
+        usage(0);
     /*
      *  signal(____, ____)
      *  while(keep looping) {
@@ -108,14 +109,16 @@ void usage(int status){
 }
 
 void handle_SIGALRM(int s) {
-    std::cout << "main:new period starting" << std::endl;
+    std::cout << "main:new period starting\n";
     g_trigger_period = true;
     alarm(config->PERIOD_FETCH);
 }
 
 void handle_SIGINT(int s){
     g_keep_looping = false;
+    g_signaled = true;
     //broadcast all the current threads
     //pthread_cond_broadcast(pthread_cond_t *cond);
+    std::cout << "Caught Control-C.\n";
 }
 
