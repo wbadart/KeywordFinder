@@ -49,3 +49,6 @@ void Web::exec(task_arg_t *args){
     args->result_web = std::string(fname);
 }
 
+void Web::set_url(std::string new_url){
+    url = new_url;
+}

@@ -12,6 +12,7 @@
 #include <cstdlib>  // exit
 #include <iostream>
 #include <string>
+#include <unistd.h> //alarm
 
 #include "config.hpp"
 #include "parser.hpp"
@@ -83,8 +84,8 @@ int main(int argc, char *argv[]){
         fetch_args[i].target = fetchers + i;
         pthread_create(fetch_threads + i
                      , NULL
-                     , thread_proxy
-                     , fetch_args + i
+                     , (void *) thread_proxy
+                     , (void *)(fetch_args + i)
         );
     }
 
@@ -114,11 +115,12 @@ void usage(int status){
     exit(status);
 }
 //args might have to be void * and then convert back to struct * inside func
-//void *thread_proxy(void * args){
-void *thread_proxy(task_arg_t* args){
-    //(task_arg_t *)args->target->exec(args);
-    args->target->exec(args);
-
+void *thread_proxy(void * args){
+//void *thread_proxy(task_arg_t* args){
+    (task_arg_t *)args->target->exec(args);
+    //args->target->exec(args);
+    return nullptr;
+}
 void *thread_function_proxy(void* args){
     task_arg_t *cast_args = (task_arg_t*)args;
     cast_args->target->exec(cast_args);

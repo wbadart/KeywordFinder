@@ -34,7 +34,9 @@ class Web: public Task{
 
         // Fetch data from "url"
         void exec(task_arg_t *args);
-
+        
+        // set site url
+        void set_url(std::string);
     private:
 
         // Internal curl handle
