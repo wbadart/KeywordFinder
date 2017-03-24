@@ -30,7 +30,7 @@ void Web::exec(task_arg_t *args){
 
     // Set target URL and redirect behavior (follow redirect)
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    // curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     std::cerr << "web:Fetching URL \"" << url << "\"\n";
 
     // Create and open temporary result file

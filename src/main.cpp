@@ -25,6 +25,9 @@ void usage(int status=0);
 void handle_SIGALRM(int);
 void handle_SIGINT(int);
 
+// Wrap the strings cells of CSV in quotes
+std::string proc_fields(std::string);
+
 bool g_keep_looping = true;
 bool g_trigger_period = false;
 Config *config;
@@ -95,6 +98,35 @@ int main(int argc, char *argv[]){
         std::cout << "main:Emitted results to \"" << fname
                   << "\"" << std::endl;
         fs.close();
+
+        // Generate HTML output
+        FileObject header("./partials/head.html")
+                 , footer("./partials/foot.html")
+                 , script("./partials/script.js");
+
+        std::ofstream fs_index("./index.html")
+                    , fs_script("./script.js");
+
+        // Tell JS how often to refresh and seed with data
+        fs_script << "var PERIOD = " << config->PERIOD_FETCH << ";\n"
+                  << "var CSV = ["   << std::endl;
+        for(std::string res_fname: parse.results)
+            for(std::string line: FileObject(res_fname))
+                fs_script << "[" << proc_fields(line) << "]," << std::endl;
+        fs_script << "];" << std::endl;
+
+        // Add in the rest of the script template
+        for(std::string line: script)
+            fs_script << line << std::endl;
+        fs_script.close();
+
+        // Create the index file
+        for(std::string line: header)
+            fs_index << line;
+        for(std::string line: footer)
+            fs_index << line;
+        fs_index.close();
+        std::cerr << "main:Report index.html generated" << std::endl;
     }
 
     // Clean up and go home
@@ -122,5 +154,26 @@ void handle_SIGINT(int s){
     std::cout << "main:Goodbye!" << std::endl;
     //broadcast all the current threads
     //pthread_cond_broadcast(pthread_cond_t *cond);
+}
+
+std::string proc_fields(std::string s){
+
+    // 1234,example,http://nd.edu,3
+    //      ^      ^^            ^
+    size_t cursor = 0;
+
+    // Surround phrase in quotes
+    while(s[cursor++] != ',');
+    s.insert(cursor++, "'");
+    while(s[cursor++ + 1] != ',');
+    s.insert(cursor++, "'");
+
+    // Surround URL in quotes
+    while(s[cursor++] != ',');
+    s.insert(cursor++, "'");
+    while(s[cursor++ + 1] != ',');
+    s.insert(cursor, "'");
+
+    return s;
 }
 

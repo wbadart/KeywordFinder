@@ -30,7 +30,7 @@ link:
 	$(CXX) $(CXX_FLAGS) $< -o $@ -c
 
 clean:
-	@rm -f $(OUT) *.o tmp_*
+	@rm -f $(OUT) *.{o,csv,html,js} tmp_*
 
 test: $(TESTS)
 	@echo "Tests complete."
@@ -50,6 +50,7 @@ test-mkfiles:
 	@echo "http://nytimes.com" >> tmp_sites
 	@echo "http://nd.edu/~wbadart" >> tmp_sites
 	@echo "examples" > tmp_search
+	@echo "student" >> tmp_search
 	@echo "SITE_FILE=tmp_sites" > tmp_config
 	@echo "SEARCH_FILE=tmp_search" >> tmp_config
 
