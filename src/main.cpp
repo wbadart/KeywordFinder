@@ -11,6 +11,7 @@
 #include <csignal>  // signal
 #include <cstdlib>  // exit
 #include <iostream>
+#include <pthread.h>
 #include <string>
 #include <unistd.h> //alarm
 
@@ -48,21 +49,22 @@ int main(int argc, char *argv[]){
 
     // Initialize task queues
     TaskQueue fetch(config->NUM_FETCH), parse(config->NUM_PARSE);
-    fetch.pipe_to(&parse);
+    fetch.pipe_to(&parse); fetch.config = config;
 
     // Register signal handlers
     signal(SIGALRM, handle_SIGALRM);
     signal(SIGINT,  handle_SIGINT);
+    signal(SIGHUP,  handle_SIGINT);
 
-    // Signal first period to begin
-    alarm(1);
+    // Signal first period to begin, track number of runs
+    alarm(1); unsigned run_number = 0;
 
     // Run main execution
     while(g_keep_looping){
 
         // If we're ready for the next cycle to begin...
         if(!g_trigger_period) continue;
-        g_trigger_period = false;
+        g_trigger_period = false; run_number++;
         std::cerr << "main:Starting new period" << std::endl;
 
         // Load up sites into queue and let
@@ -72,6 +74,27 @@ int main(int argc, char *argv[]){
 
         // Template param is the next Task type in the pipeline
         fetch.run<Parser>();
+
+        // Wait for last pipeline component (parsing) to finish
+        while(!fetch.done() && !parse.done())
+            pthread_cond_wait(&TaskQueue::cond, &TaskQueue::mux);
+        std::cerr << "main:Cleared cond_wait" << std::endl;
+
+        // Concatenate parse results
+        std::string fname(std::to_string(run_number) + ".csv");
+        std::ofstream fs(fname);
+
+        // Column labels
+        fs << "Time,Phrase,Site,Count" << std::endl;
+
+        // The actual data (stored in tmp files)
+        for(std::string res_fname: parse.results)
+            for(std::string line: FileObject(res_fname))
+                fs << line << std::endl;
+
+        std::cout << "main:Emitted results to \"" << fname
+                  << "\"" << std::endl;
+        fs.close();
     }
 
     // Clean up and go home

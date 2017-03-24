@@ -11,8 +11,8 @@
 #include "./web.hpp"
 
 Web::Web(std::string _url):
-        curl(curl_easy_init())
-      , url(_url){
+        curl(curl_easy_init()){
+    url = _url;
     std::cerr << "web:Constructing with url \""
               << url << "\"" << std::endl;
 }
@@ -24,6 +24,9 @@ Web::~Web(){
 }
 
 void Web::exec(task_arg_t *args){
+
+    // Record timestamp
+    args->started = time(0);
 
     // Set target URL and redirect behavior (follow redirect)
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -49,6 +52,3 @@ void Web::exec(task_arg_t *args){
     args->result = std::string(fname);
 }
 
-void Web::set_url(std::string new_url){
-    url = new_url;
-}

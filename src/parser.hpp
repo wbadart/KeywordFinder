@@ -15,6 +15,7 @@
 #include <cstring>  // strdup
 #include <unistd.h> // close
 #include <iostream>
+#include <map>
 #include <set>
 #include <string>
 
@@ -27,8 +28,9 @@ class Parser: public Task{
     public:
 
         // Constructor: takes target web_result fname
-        Parser(std::string _fname_result=""
-             , std::string _fname_search="");
+        /* Parser(std::string _fname_result="" */
+        /*      , std::string _fname_search=""); */
+        Parser(std::string data="");
 
         // Deconstructor. Yup.
         ~Parser();
@@ -38,14 +40,14 @@ class Parser: public Task{
 
     private:
 
+        // Time the corresponding fetch started
+        std::string started;
+
         // Name of target web_result
         std::string fname_result;
 
         // Name of the search term file
         std::string fname_search;
-
-        // URL corresponding to result file
-        std::string url;
 };
 
 #endif

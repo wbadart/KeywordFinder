@@ -21,8 +21,10 @@ OBJS  = main.o config.o file_object.o web.o parser.o task_queue.o
 TESTS = test-usage test-fetch test-parse
 
 
-all: $(OBJS)
-	$(LD) $(LD_FLAGS) $^ -o $(OUT)
+all: $(OBJS) link
+
+link:
+	$(LD) $(LD_FLAGS) $(OBJS) -o $(OUT)
 
 %.o: src/%.cpp
 	$(CXX) $(CXX_FLAGS) $< -o $@ -c
