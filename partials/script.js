@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+    // Create <table>
     var rows = CSV.map(function(row){
         return [new Date(row[0]), row[1], row[2], row[3]];
     }).map(function(cols){
@@ -10,20 +11,28 @@ $(document).ready(function(){
         return tr;
     }).forEach(function(tr){$('tbody').append(tr)});
 
+    // Turn CSV into a nicer data structure, organized by term
+    var data = CSV.reduce(function(acc, row){
+        if(!acc[row[1]]) acc[row[1]] = {}
+        acc[row[1]][row[2]] = row[3];
+        return acc;
+    }, {});
+
     var chart = Highcharts.chart('chart', {
         chart: { type: 'bar' },
         title: { text: 'Scan Results' },
 
         // Search terms along x-axis
         xAxis: {
-            categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+            // categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+            categories: Object.keys(data)
         },
 
         // Total hits along y-axis
         yAxis: {
             min: 0,
             title: {
-                text: 'Total fruit consumption'
+                text: 'Total hits'
             }
         },
         legend: { reversed: true },
@@ -32,18 +41,17 @@ $(document).ready(function(){
         },
 
         // One series per website
-        series: [{
-            name: 'John',
-            data: [5, 3, 4, 7, 2]
-        }, {
-            name: 'Jane',
-            data: [2, 2, 3, 2, 1]
-        }, {
-            name: 'Joe',
-            data: [3, 4, 4, 2, 5]
-        }]
-
+        series: mkseries(data, Object.keys(data))
     });
 
 });
+
+function mkseries(data, terms){
+    var sites = Object.keys(data[Object.keys(data)[0]]);
+    return sites.map(function(site){
+        return { name: site
+               , data: terms.map(function(t){ return data[t][site] })
+               }
+    });
+}
 
