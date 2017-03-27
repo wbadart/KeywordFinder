@@ -32,18 +32,23 @@ link:
 clean:
 	@rm -f $(OUT) *.{o,csv,html,js} tmp_*
 
+# Run all tests
 test: $(TESTS)
-	@echo "Tests complete."
+	@echo "Tests successful."
 
+# Test that program reports usage message
 test-usage: all test-mkfiles
 	./$(OUT) --help
 
+# Check that fetch result files exist and aren't empty
 test-fetch: all test-mkfiles
-	./$(OUT) tmp_config 2> /dev/null | awk -F: '/web_result/ { print $$3 }' | xargs test -s
+	timeout -s INT 10 ./$(OUT) tmp_config 2> /dev/null | awk -F: '/web_result/ { print $$3 }' | test -s
 
+# Check that parse result files exist and aren't empty
 test-parse: all test-mkfiles
-	./$(OUT) tmp_config 2> /dev/null | grep -Pq '^parse.Found'
+	timeout -s INT 10 ./$(OUT) tmp_config 2> /dev/null | awk -F' ' '/parse_result/ { print $$4 }' | test -s
 
+# Create temporary config files
 test-mkfiles:
 	@echo "http://example.com" > tmp_sites
 	@echo "http://cnn.com" >> tmp_sites
