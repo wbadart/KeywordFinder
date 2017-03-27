@@ -121,7 +121,7 @@ int main(int argc, char *argv[]){
 
     // Clean up and go home
     delete config;
-    return EXIT_SUCCESS;
+    std::exit(EXIT_SUCCESS);
 }
 
 void usage(int status){
