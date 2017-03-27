@@ -101,16 +101,12 @@ int main(int argc, char *argv[]){
         fs.close();
 
         // Generate HTML output
-        FileObject header("./partials/head.html")
-                 , footer("./partials/foot.html")
-                 , script("./partials/script.js");
+        FileObject script("./partials/script.js");
 
-        std::ofstream fs_index("./index.html")
-                    , fs_script("./script.js");
+        std::ofstream fs_script("./script.js");
 
-        // Tell JS how often to refresh and seed with data
-        fs_script << "var PERIOD = " << config->PERIOD_FETCH << ";\n"
-                  << "var CSV = ["   << std::endl;
+        // Seed JS file with data
+        fs_script << "var CSV = ["   << std::endl;
         for(std::string res_fname: parse.results)
             for(std::string line: FileObject(res_fname))
                 fs_script << "[" << proc_fields(line) << "]," << std::endl;
@@ -120,13 +116,6 @@ int main(int argc, char *argv[]){
         for(std::string line: script)
             fs_script << line << std::endl;
         fs_script.close();
-
-        // Create the index file
-        for(std::string line: header)
-            fs_index << line;
-        for(std::string line: footer)
-            fs_index << line;
-        fs_index.close();
         std::cerr << "main:Report index.html generated" << std::endl;
     }
 
