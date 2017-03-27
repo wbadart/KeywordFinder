@@ -28,9 +28,8 @@ void handle_SIGINT(int);
 // Wrap the strings cells of CSV in quotes
 std::string proc_fields(std::string);
 
-bool g_keep_looping = true;
+bool g_keep_looping   = true;
 bool g_trigger_period = false;
-bool g_signaled = false;
 
 Config *config;
 
@@ -44,6 +43,7 @@ int main(int argc, char *argv[]){
             && (std::string(argv[1]) == "-h"
             ||  std::string(argv[1]) == "--help"))
         usage(0);
+
     // Load program configutaion, use default
     //     if command line argument not given
     config = new Config(argc == 2 ? argv[1] : "./config");
@@ -153,10 +153,7 @@ void handle_SIGALRM(int s) {
 
 void handle_SIGINT(int s){
     g_keep_looping = false;
-    g_signaled = true;
     std::cout << "main:Goodbye!" << std::endl;
-    //broadcast all the current threads
-    //pthread_cond_broadcast(pthread_cond_t *cond);
 }
 
 std::string proc_fields(std::string s){

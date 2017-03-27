@@ -11,10 +11,10 @@
 
 OUT = site-tester
 
-CXX  	  = g++
+CXX  	  = /afs/nd.edu/user14/csesoft/new/bin/g++
 CXX_FLAGS = -Wall -ggdb -std=gnu++11
 
-LD 	     = g++
+LD 	     = /afs/nd.edu/user14/csesoft/new/bin/g++
 LD_FLAGS = -lcurl -lpthread -static-libstdc++
 
 OBJS  = main.o config.o file_object.o web.o parser.o task_queue.o
@@ -53,4 +53,5 @@ test-mkfiles:
 	@echo "student" >> tmp_search
 	@echo "SITE_FILE=tmp_sites" > tmp_config
 	@echo "SEARCH_FILE=tmp_search" >> tmp_config
+	@echo "PERIOD_FETCH=8" >> tmp_config
 
