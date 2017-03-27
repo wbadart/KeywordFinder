@@ -10,64 +10,40 @@ $(document).ready(function(){
         return tr;
     }).forEach(function(tr){$('tbody').append(tr)});
 
-    var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'chart',
-            type: 'scatter',
-            options3d: {
-                enabled: true,
-                alpha: 10,
-                beta: 30,
-                depth: 250,
-                viewDistance: 5,
-                fitToPlot: false,
-                frame: {
-                    bottom: { size: 1, color: 'rgba(0,0,0,0.02)' },
-                    back: { size: 1, color: 'rgba(0,0,0,0.04)' },
-                    side: { size: 1, color: 'rgba(0,0,0,0.06)' }
-                }
-            },
+    var chart = Highcharts.chart('chart', {
+        chart: { type: 'bar' },
+        title: { text: 'Scan Results' },
+
+        // Search terms along x-axis
+        xAxis: {
+            categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
         },
-        title: {
-            text: 'Data'
-        },
-        subtitle: {
-            text: 'Click and drag the plot area to rotate in space'
-        },
-        plotOptions: {
-            scatter: {
-                width: 10,
-                height: 10,
-                depth: 10
-            }
-        },
+
+        // Total hits along y-axis
         yAxis: {
             min: 0,
-            max: 10,
-            // title: null
+            title: {
+                text: 'Total fruit consumption'
+            }
         },
-        xAxis: {
-            labels: CSV.map(function(row){
-                    return row[1]})
-                .filter(function(row, i, rs){
-                    i === rs.indexOf(row)})
-            min: 0,
-            max: 10,
-            gridLineWidth: 1
+        legend: { reversed: true },
+        plotOptions: {
+            series: { stacking: 'normal' }
         },
-        zAxis: {
-            min: 0,
-            max: 10,
-            // showFirstLabel: false
-        },
-        legend: {
-            enabled: false
-        },
+
+        // One series per website
         series: [{
-            name: 'Reading',
-            // colorByPoint: true,
-            data: CSV.map(function(row){return row.slice(1)}),
+            name: 'John',
+            data: [5, 3, 4, 7, 2]
+        }, {
+            name: 'Jane',
+            data: [2, 2, 3, 2, 1]
+        }, {
+            name: 'Joe',
+            data: [3, 4, 4, 2, 5]
         }]
-    })
+
+    });
+
 });
 
