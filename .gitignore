@@ -1,3 +1,6 @@
 *.csv
 *.o
 site-tester
+tmp_*
+index.html
+script.js
