@@ -101,9 +101,16 @@ int main(int argc, char *argv[]){
         fs.close();
 
         // Generate HTML output
-        FileObject script("./partials/script.js");
+        FileObject script("./partials/script.js")
+                 , index("./partials/index.html");
 
-        std::ofstream fs_script("./script.js");
+        std::ofstream fs_script("./script.js")
+                    , fs_index("./index.html");
+
+        // Copy the index file to project root
+        for(std::string line: index)
+            fs_index << line << std::endl;
+        fs_index.close();
 
         // Seed JS file with data
         fs_script << "var CSV = ["   << std::endl;
