@@ -34,9 +34,7 @@ class Web: public Task{
 
         // Fetch data from "url"
         void exec(task_arg_t *args);
-        
-        // set site url
-        void set_url(std::string);
+
     private:
 
         // Internal curl handle
@@ -44,9 +42,6 @@ class Web: public Task{
 
         // Exec result (non-zero means error)
         CURLcode result;
-
-        // URL of target resource
-        std::string url;
 };
 
 #endif

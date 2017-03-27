@@ -16,7 +16,7 @@ pthread_mutex_t TaskQueue::mux;
 
 TaskQueue::TaskQueue(unsigned _MAX_THREADS):
         MAX_THREADS(_MAX_THREADS)
-      , active_threads(0)
+      , nthreads(0)
       , threads(new pthread_t[MAX_THREADS])
       , args(new task_arg_t[MAX_THREADS])
       , next(nullptr){
@@ -32,6 +32,9 @@ TaskQueue::~TaskQueue(){
 
 void TaskQueue::pipe_to(TaskQueue *_next){
     next = _next; }
+
+bool TaskQueue::done(){
+    return queue.empty(); }
 
 void *TaskQueue::thread_function_proxy(void* args){
     task_arg_t *cast_args = (task_arg_t*)args;

@@ -11,6 +11,7 @@
 #include <csignal>  // signal
 #include <cstdlib>  // exit
 #include <iostream>
+#include <pthread.h>
 #include <string>
 #include <unistd.h> //alarm
 
@@ -23,6 +24,9 @@
 void usage(int status=0);
 void handle_SIGALRM(int);
 void handle_SIGINT(int);
+
+// Wrap the strings cells of CSV in quotes
+std::string proc_fields(std::string);
 
 bool g_keep_looping = true;
 bool g_trigger_period = false;
@@ -49,21 +53,22 @@ int main(int argc, char *argv[]){
 
     // Initialize task queues
     TaskQueue fetch(config->NUM_FETCH), parse(config->NUM_PARSE);
-    fetch.pipe_to(&parse);
+    fetch.pipe_to(&parse); fetch.config = config;
 
     // Register signal handlers
     signal(SIGALRM, handle_SIGALRM);
     signal(SIGINT,  handle_SIGINT);
+    signal(SIGHUP,  handle_SIGINT);
 
-    // Signal first period to begin
-    alarm(1);
+    // Signal first period to begin, track number of runs
+    alarm(1); unsigned run_number = 0;
 
     // Run main execution
     while(g_keep_looping){
 
         // If we're ready for the next cycle to begin...
         if(!g_trigger_period) continue;
-        g_trigger_period = false;
+        g_trigger_period = false; run_number++;
         std::cerr << "main:Starting new period" << std::endl;
 
         // Load up sites into queue and let
@@ -73,6 +78,56 @@ int main(int argc, char *argv[]){
 
         // Template param is the next Task type in the pipeline
         fetch.run<Parser>();
+
+        // Wait for last pipeline component (parsing) to finish
+        while(!fetch.done() && !parse.done())
+            pthread_cond_wait(&TaskQueue::cond, &TaskQueue::mux);
+        std::cerr << "main:Cleared cond_wait" << std::endl;
+
+        // Concatenate parse results
+        std::string fname(std::to_string(run_number) + ".csv");
+        std::ofstream fs(fname);
+
+        // Column labels
+        fs << "Time,Phrase,Site,Count" << std::endl;
+
+        // The actual data (stored in tmp files)
+        for(std::string res_fname: parse.results)
+            for(std::string line: FileObject(res_fname))
+                fs << line << std::endl;
+
+        std::cout << "main:Emitted results to \"" << fname
+                  << "\"" << std::endl;
+        fs.close();
+
+        // Generate HTML output
+        FileObject header("./partials/head.html")
+                 , footer("./partials/foot.html")
+                 , script("./partials/script.js");
+
+        std::ofstream fs_index("./index.html")
+                    , fs_script("./script.js");
+
+        // Tell JS how often to refresh and seed with data
+        fs_script << "var PERIOD = " << config->PERIOD_FETCH << ";\n"
+                  << "var CSV = ["   << std::endl;
+        for(std::string res_fname: parse.results)
+            for(std::string line: FileObject(res_fname))
+                fs_script << "[" << proc_fields(line) << "]," << std::endl;
+        fs_script << "];" << std::endl;
+
+        // Add in the rest of the script template
+        for(std::string line: script)
+            fs_script << line << std::endl;
+        fs_script.close();
+
+        // Create the index file
+        for(std::string line: header)
+            fs_index << line;
+        for(std::string line: footer)
+            fs_index << line;
+        fs_index.close();
+        std::cerr << "main:Report index.html generated" << std::endl;
     }
 
     // Clean up and go home
@@ -102,5 +157,26 @@ void handle_SIGINT(int s){
     std::cout << "main:Goodbye!" << std::endl;
     //broadcast all the current threads
     //pthread_cond_broadcast(pthread_cond_t *cond);
+}
+
+std::string proc_fields(std::string s){
+
+    // 1234,example,http://nd.edu,3
+    //      ^      ^^            ^
+    size_t cursor = 0;
+
+    // Surround phrase in quotes
+    while(s[cursor++] != ',');
+    s.insert(cursor++, "'");
+    while(s[cursor++ + 1] != ',');
+    s.insert(cursor++, "'");
+
+    // Surround URL in quotes
+    while(s[cursor++] != ',');
+    s.insert(cursor++, "'");
+    while(s[cursor++ + 1] != ',');
+    s.insert(cursor, "'");
+
+    return s;
 }
 

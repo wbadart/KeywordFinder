@@ -11,10 +11,25 @@
 
 #include "parser.hpp"
 
-Parser::Parser(std::string _fname_result
-             , std::string _fname_search):
-        fname_result(_fname_result)
-      , fname_search(_fname_search){}
+/* Parser::Parser(std::string _fname_result */
+/*              , std::string _fname_search): */
+/*         fname_result(_fname_result) */
+/*       , fname_search(_fname_search){} */
+Parser::Parser(std::string data){
+    size_t i;
+    for(i = 0; i < data.size() && data[i] != '|'; i++)
+        url += data[i];
+    for(i = i+1; i < data.size() && data[i] != '|'; i++)
+        started += data[i];
+    for(i = i+1; i < data.size() && data[i] != '|'; i++)
+        fname_result += data[i];
+    for(i = i+1; i < data.size(); i++)
+        fname_search += data[i];
+    std::cerr << "parse:Constructed parser with" << std::endl
+              << "parse:\turl="      << url << std::endl
+              << "parse:\tf_result=" << fname_result << std::endl
+              << "parse:\tf_search=" << fname_search << std::endl;
+}
 
 Parser::~Parser(){}
 
@@ -44,9 +59,11 @@ void Parser::exec(task_arg_t *args){
     std::ofstream fs(fname);
 
     for(auto pair: result)
-        fs << url << "," << pair.first
-                  << "," << pair.second
-                  << std::endl;
+        fs << started << "," << pair.first << ","
+           << url << "," << pair.second << std::endl;
+
+    std::cout << "parse:Emitted results to \""
+              << fname << "\"" << std::endl;
 
     fs.close();
     args->result = std::string(fname);
